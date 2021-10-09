@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -61,6 +62,9 @@ public class test_m extends LinearOpMode {
     private DcMotor BR = null;
     private DcMotor BL = null;
 
+    private DcMotor ML = null;
+    private DcMotor MR = null;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -74,12 +78,19 @@ public class test_m extends LinearOpMode {
         BR  = hardwareMap.get(DcMotor.class, "BR");
         BL = hardwareMap.get(DcMotor.class, "BL");
 
+        ML = hardwareMap.get(DcMotor.class, "ML");
+        MR  = hardwareMap.get(DcMotor.class, "MR");
+
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        FR.setDirection(DcMotor.Direction.FORWARD);
-        FL.setDirection(DcMotor.Direction.REVERSE);
-        BR.setDirection(DcMotor.Direction.FORWARD);
-        BL.setDirection(DcMotor.Direction.REVERSE);
+        FR.setDirection(DcMotor.Direction.REVERSE);
+        FL.setDirection(DcMotor.Direction.FORWARD);
+        BR.setDirection(DcMotor.Direction.REVERSE);
+        BL.setDirection(DcMotor.Direction.FORWARD);
+
+        ML.setDirection(DcMotor.Direction.REVERSE);
+        MR.setDirection(DcMotor.Direction.REVERSE);
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -108,6 +119,9 @@ public class test_m extends LinearOpMode {
             FR.setPower(rightFrontDir);
             BL.setPower(leftBackDir);
             BR.setPower(rightBackDir);
+
+            MR.setPower(gamepad1.left_stick_y);
+            ML.setPower(gamepad1.left_stick_y);
         }
     }
 }
