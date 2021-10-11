@@ -32,6 +32,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -71,6 +72,8 @@ public class SwaggyTheRobot {
     public DcMotor BL = null;
     public DcMotor BR = null;
 
+    public DcMotor DK = null;
+
     // just gonna define some variables for encoders real quick dont mind me
     static final double mmPerInch               = 25.4f;    // this is jus math tho
     static final double countsPerRevolution     = 383.6f;   // Gobilda Yellowjacket 435
@@ -103,6 +106,8 @@ public class SwaggyTheRobot {
         FR = OpModeReference.hardwareMap.get(DcMotor.class, "FR");
         BL = OpModeReference.hardwareMap.get(DcMotor.class, "BL");
         BR = OpModeReference.hardwareMap.get(DcMotor.class, "BR");
+
+        DK = OpModeReference.hardwareMap.get(DcMotor.class, "DK");
 
         // motor arrays
         // left
@@ -315,6 +320,12 @@ public class SwaggyTheRobot {
             m.setPower(methodSpeed * stepMult);
     }
 
+    public void ducks (boolean in, boolean out) {
+        if (in && !out)
+            DK.setPower(1);
+        if (!in && out)
+            DK.setPower(-1);
+    }
 
     public void driverControl () {
 

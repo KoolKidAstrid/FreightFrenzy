@@ -18,6 +18,7 @@ public class MainDrive extends LinearOpMode {
 
         while (opModeIsActive()){
             swaggy.driverControl();
+            swaggy.ducks(gamepad2.left_bumper, gamepad2.right_bumper);
         }
 
     }
