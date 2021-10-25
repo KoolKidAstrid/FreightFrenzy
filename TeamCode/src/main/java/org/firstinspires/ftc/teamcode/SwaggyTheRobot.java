@@ -320,11 +320,19 @@ public class SwaggyTheRobot {
             m.setPower(methodSpeed * stepMult);
     }
 
+    public void autoDucks(double seconds, double power) {
+        DK.setPower(power);
+        OpModeReference.sleep(Math.round(seconds*1000));
+        DK.setPower(0);
+    }
+
     public void ducks (boolean in, boolean out) {
         if (in && !out)
             DK.setPower(1);
         if (!in && out)
             DK.setPower(-1);
+        if (!in && !out)
+            DK.setPower(0);
     }
 
     public void driverControl () {
