@@ -328,9 +328,9 @@ public class SwaggyTheRobot {
 
     public void ducks (boolean in, boolean out) {
         if (in && !out)
-            DK.setPower(1);
+            DK.setPower(0.35);
         if (!in && out)
-            DK.setPower(-1);
+            DK.setPower(-0.35);
         if (!in && !out)
             DK.setPower(0);
     }
