@@ -9,18 +9,18 @@ public class AutoRed extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        SwaggyTheRobot swaggy = new SwaggyTheRobot(this);
-        swaggy.initialize();
+        NyxTheRobot nyx = new NyxTheRobot(this);
+        nyx.initialize();
         waitForStart();
 
-        swaggy.drive(-27, 0.5);
-        swaggy.turn(115, 0.35);
-        swaggy.drive(-42, 0.5);
-        for (DcMotor m : swaggy.AllMotors) {
+        nyx.drive(-27, 0.5);
+        nyx.turn(120, 0.35);
+        nyx.drive(-42, 0.5);
+        for (DcMotor m : nyx.AllMotors) {
             m.setPower(-0.05);
         }
-        swaggy.autoDucks(3, -0.5);
-        for (DcMotor m : swaggy.AllMotors) {
+        nyx.autoDucks(3, -0.5);
+        for (DcMotor m : nyx.AllMotors) {
             m.setPower(0);
         }
 

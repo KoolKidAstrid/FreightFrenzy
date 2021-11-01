@@ -56,7 +56,7 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 // This is not an OpMode.  It is a class that holds all the boring stuff
 
-public class SwaggyTheRobot {
+public class NyxTheRobot {
 
 
     public DcMotor[] LeftMotors = new DcMotor[2];
@@ -74,6 +74,9 @@ public class SwaggyTheRobot {
 
     public DcMotor DK = null;
 
+    public DcMotor IN = null;
+    public Servo LFT = null;
+
     // just gonna define some variables for encoders real quick dont mind me
     static final double mmPerInch               = 25.4f;    // this is jus math tho
     static final double countsPerRevolution     = 383.6f;   // Gobilda Yellowjacket 435
@@ -87,7 +90,7 @@ public class SwaggyTheRobot {
 
     // you will need a reference to your OpMode
     private LinearOpMode OpModeReference;
-    public SwaggyTheRobot(LinearOpMode opMode) {
+    public NyxTheRobot(LinearOpMode opMode) {
         OpModeReference = opMode;
     }
 
@@ -108,6 +111,10 @@ public class SwaggyTheRobot {
         BR = OpModeReference.hardwareMap.get(DcMotor.class, "BR");
 
         DK = OpModeReference.hardwareMap.get(DcMotor.class, "DK");
+
+        IN = OpModeReference.hardwareMap.get(DcMotor.class, "IN");
+        LFT = OpModeReference.hardwareMap.get(Servo.class, "LFT");
+
 
         // motor arrays
         // left
@@ -335,9 +342,19 @@ public class SwaggyTheRobot {
             DK.setPower(0);
     }
 
+    //crontol
+
+    public void lifty (double control) {
+        LFT.setPosition(Range.clip(control, 0f, 1f));
+    }
+
+    public void spinny (double power) {
+        IN.setPower(power);
+    }
+
     public void driverControl () {
 
-        double drive = OpModeReference.gamepad1.left_stick_y;
+        double drive = -OpModeReference.gamepad1.left_stick_y;
         double turn = OpModeReference.gamepad1.right_stick_x;
         double movingSpeed;
 
