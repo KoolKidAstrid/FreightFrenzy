@@ -75,7 +75,7 @@ public class NyxTheRobot {
     public DcMotor DK = null;
 
     public DcMotor IN = null;
-    public Servo LFT = null;
+    public DcMotor ARM = null;
 
     // just gonna define some variables for encoders real quick dont mind me
     static final double mmPerInch               = 25.4f;    // this is jus math tho
@@ -113,7 +113,7 @@ public class NyxTheRobot {
         DK = OpModeReference.hardwareMap.get(DcMotor.class, "DK");
 
         IN = OpModeReference.hardwareMap.get(DcMotor.class, "IN");
-        LFT = OpModeReference.hardwareMap.get(Servo.class, "LFT");
+        ARM = OpModeReference.hardwareMap.get(DcMotor.class, "ARM");
 
 
         // motor arrays
@@ -137,6 +137,11 @@ public class NyxTheRobot {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
+
+        ARM.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ARM.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ARM.setDirection(DcMotorSimple.Direction.FORWARD);
+        ARM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // initialize the IMU
         imu.initialize(parameters);
@@ -344,8 +349,19 @@ public class NyxTheRobot {
 
     //crontol
 
-    public void lifty (double control) {
-        LFT.setPosition(Range.clip(control, 0f, 1f));
+//    public void lifty (double control) {
+//        LFT.setPosition(Range.clip(control, 0f, 1f));
+//    }
+
+    public void setArm (int pos) {
+        ARM.setTargetPosition(pos);
+        ARM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if (pos > ARM.getCurrentPosition()) {
+            ARM.setPower(-0.2);
+        }
+        else {
+            ARM.setPower(0.5);
+        }
     }
 
     public void spinny (double power) {

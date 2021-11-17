@@ -2,10 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name="Auto Red", group="Linear Opmode")
-public class AutoRed extends LinearOpMode {
+@Autonomous(name="arm test 2", group="Linear Opmode")
+public class armtest2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -14,20 +15,7 @@ public class AutoRed extends LinearOpMode {
         waitForStart();
 
         nyx.setArm(-280);
-        sleep(500);
-
-        nyx.drive(-27, 0.5);
-        nyx.turn(120, 0.35);
-        nyx.drive(-42, 0.5);
-        for (DcMotor m : nyx.AllMotors) {
-            m.setPower(-0.05);
-        }
-        nyx.autoDucks(3, -0.5);
-        for (DcMotor m : nyx.AllMotors) {
-            m.setPower(0);
-        }
-
-
+        sleep(3000);
         nyx.setArm(0);
 
     }

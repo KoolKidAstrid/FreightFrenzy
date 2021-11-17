@@ -13,6 +13,9 @@ public class AutoBlue extends LinearOpMode {
         nyx.initialize();
         waitForStart();
 
+        nyx.setArm(-280);
+        sleep(500);
+
         nyx.drive(-27, 0.5);
         nyx.turn(-90, 0.35);
         nyx.drive(-20, 0.5);
@@ -27,6 +30,7 @@ public class AutoBlue extends LinearOpMode {
         }
         nyx.drive(18, 0.5);
 
-
+        nyx.setArm(0);
+        
     }
 }
