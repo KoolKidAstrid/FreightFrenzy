@@ -170,9 +170,9 @@ public class NyxTheRobot {
         if (targetAngleDifference < 0) {
             // turning right, so we want all right motors going backwards
             for (DcMotor m : RightMotors)
-                m.setPower(-power * autoSpeedMult);
+                m.setPower(-power);
             for (DcMotor m : LeftMotors)
-                m.setPower(power * autoSpeedMult);
+                m.setPower(power);
             // sleep a tenth of a second
             // WARNING - not sure why this is needed - but sometimes right turns didn't work without
             OpModeReference.sleep(100);
@@ -185,26 +185,27 @@ public class NyxTheRobot {
                 // THIS CODE IS FOR STEPPING DOWN MOTOR POWER
                 if (!secondStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.75) {
                     for (DcMotor m : RightMotors)
-                        m.setPower(-power * autoSpeedMult /2);
+                        m.setPower(-power * 0.25);
                     for (DcMotor m : LeftMotors)
-                        m.setPower(power * autoSpeedMult /2);
+                        m.setPower(power * 0.25);
                     secondStepDownComplete = true;
                 } else if (!firstStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.50) {
                     for (DcMotor m : RightMotors)
-                        m.setPower(-power * autoSpeedMult);
+                        m.setPower(-power * 0.5);
                     for (DcMotor m : LeftMotors)
-                        m.setPower(power * autoSpeedMult);
+                        m.setPower(power * 0.5);
                     firstStepDownComplete = true;
                 }
 
                 OpModeReference.telemetry.addData("target", targetAngleDifference);
                 OpModeReference.telemetry.addData("current", GetAngleDifference(startAngle));
-//                OpModeReference.telemetry.addData("LeftMotorPower", ML.getPower());
-//                OpModeReference.telemetry.addData("RightMotorPower", MR.getPower());
+                OpModeReference.telemetry.addData("LeftMotorPower", (FL.getPower() + BL.getPower())/2);
+                OpModeReference.telemetry.addData("RightMotorPower", (FR.getPower() + BR.getPower())/2);
                 OpModeReference.telemetry.update();
             }
             // if targetAngleDifference is Positive, we're turning LEFT
         } else if (targetAngleDifference > 0) {
+
             // turning left so want all left motors going backwards
             for (DcMotor m : RightMotors)
                 m.setPower(power);
@@ -222,21 +223,21 @@ public class NyxTheRobot {
                 // THIS CODE IS FOR STEPPING DOWN MOTOR POWER
                 if (!secondStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.75) {
                     for (DcMotor m : RightMotors)
-                        m.setPower(power * autoSpeedMult /2);
+                        m.setPower(power * 0.25);
                     for (DcMotor m : LeftMotors)
-                        m.setPower(-power * autoSpeedMult /2);
+                        m.setPower(-power * 0.25);
                     secondStepDownComplete = true;
                 } else if (!firstStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.50) {
                     for (DcMotor m : RightMotors)
-                        m.setPower(power * autoSpeedMult);
+                        m.setPower(power * 0.5);
                     for (DcMotor m : LeftMotors)
-                        m.setPower(-power * autoSpeedMult);
+                        m.setPower(-power * 0.5);
                     firstStepDownComplete = true;
                 }
                 OpModeReference.telemetry.addData("target", targetAngleDifference);
                 OpModeReference.telemetry.addData("current", GetAngleDifference(startAngle));
-                OpModeReference.telemetry.addData("LeftMotorPower", FL.getPower());
-                OpModeReference.telemetry.addData("RightMotorPower", FR.getPower());
+                OpModeReference.telemetry.addData("LeftMotorPower", (FL.getPower() + BL.getPower())/2);
+                OpModeReference.telemetry.addData("RightMotorPower", (FR.getPower() + BR.getPower())/2);
                 OpModeReference.telemetry.update();
             }
         } else {

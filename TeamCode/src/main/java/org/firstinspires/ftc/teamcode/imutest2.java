@@ -3,12 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Disabled
-@Autonomous(name="arm test 2", group="Linear Opmode")
-public class armtest2 extends LinearOpMode {
+@Autonomous(name="imu test 2", group="Linear Opmode")
+public class imutest2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -16,9 +14,9 @@ public class armtest2 extends LinearOpMode {
         nyx.initialize();
         waitForStart();
 
-        nyx.setArm(-280);
-        sleep(3000);
-        nyx.setArm(0);
+        nyx.turn(90, 0.5);
+        sleep(1000);
+        nyx.turn(-90, 0.5);
 
     }
 }
