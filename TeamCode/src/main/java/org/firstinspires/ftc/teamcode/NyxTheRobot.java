@@ -33,6 +33,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -77,6 +78,11 @@ public class NyxTheRobot {
     public DcMotor IN = null;
     public DcMotor ARM = null;
 
+    public DcMotor ARM2 = null;
+
+    public CRServo IN1 = null;
+    public CRServo IN2 = null;
+
     // just gonna define some variables for encoders real quick dont mind me
     static final double mmPerInch               = 25.4f;    // this is jus math tho
     static final double countsPerRevolution     = 383.6f;   // Gobilda Yellowjacket 435
@@ -115,6 +121,14 @@ public class NyxTheRobot {
         IN = OpModeReference.hardwareMap.get(DcMotor.class, "IN");
         ARM = OpModeReference.hardwareMap.get(DcMotor.class, "ARM");
 
+        ARM2 = OpModeReference.hardwareMap.get(DcMotor.class, "ARM2");
+
+        IN1 = OpModeReference.hardwareMap.get(CRServo.class, "IN1");
+        IN2 = OpModeReference.hardwareMap.get(CRServo.class, "IN2");
+
+
+        IN1.setDirection(DcMotorSimple.Direction.REVERSE);
+        IN2.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // motor arrays
         // left
@@ -142,6 +156,10 @@ public class NyxTheRobot {
         ARM.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ARM.setDirection(DcMotorSimple.Direction.FORWARD);
         ARM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        ARM2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        ARM2.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         // initialize the IMU
         imu.initialize(parameters);
@@ -365,13 +383,37 @@ public class NyxTheRobot {
         }
     }
 
+
+    public void setArm2 (float pos) {
+        int pos2 = Math.round(pos * 1880);
+        ARM2.setTargetPosition(pos2);
+        ARM2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        double power = ((float) (ARM2.getCurrentPosition() - pos2)/1880);
+        ARM2.setPower(power);
+//        if (pos2 > ARM2.getCurrentPosition() + 10) {
+//            ARM2.setPower(-0.3);
+//        }
+//        else if (pos2 < ARM2.getCurrentPosition() - 10){
+//            ARM2.setPower(0.3);
+//        }
+//
+//        else {
+//            ARM2.setPower(0);
+//        }
+    }
+
     public void spinny (double power) {
         IN.setPower(power);
     }
 
+    public void intake (double power) {
+        IN1.setPower(power);
+        IN2.setPower(power);
+    }
+
     public void driverControl () {
 
-        double drive = -OpModeReference.gamepad1.left_stick_y;
+        double drive = OpModeReference.gamepad1.left_stick_y;
         double turn = OpModeReference.gamepad1.right_stick_x;
         double movingSpeed;
 

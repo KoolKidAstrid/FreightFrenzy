@@ -16,8 +16,8 @@ public class armtest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            nyx.ARM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            telemetry.addData("swag", nyx.ARM.getCurrentPosition());
+            nyx.ARM2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            telemetry.addData("swag", nyx.ARM2.getCurrentPosition());
             telemetry.update();
         }
 

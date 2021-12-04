@@ -15,10 +15,10 @@ public class MainDrive extends LinearOpMode {
         while (opModeIsActive()){
             nyx.driverControl();
             nyx.ducks(gamepad2.left_bumper, gamepad2.right_bumper);
-            nyx.setArm((int) (-280 - (gamepad2.right_trigger * -280)));
+            nyx.setArm2(gamepad2.right_trigger);
 //            nyx.lifty(gamepad2.right_trigger);
 
-            nyx.spinny(gamepad2.left_stick_y);
+            nyx.intake(gamepad2.left_stick_y);
         }
 
     }
