@@ -31,34 +31,26 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-//vision import
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import java.util.List;
-//dont mind me just importing some imu stuff
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+//vision import
+//dont mind me just importing some imu stuff
 //blinkin import
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+
 
 // This is not an OpMode.  It is a class that holds all the boring stuff
 
-public class NyxTheRobot {
+public class NyxTheRobot2 {
 
 
     public DcMotorEx[] LeftMotors = new DcMotorEx[2];
@@ -97,12 +89,13 @@ public class NyxTheRobot {
 
     // you will need a reference to your OpMode
     private LinearOpMode OpModeReference;
-    public NyxTheRobot(LinearOpMode opMode) {
+    public NyxTheRobot2(LinearOpMode opMode) {
         OpModeReference = opMode;
     }
 
     public void initialize() {
-// imu stuff from last year cause i dont want to rebuild this from the ground up
+
+        // imu stuff from last year cause i dont want to rebuild this from the ground up
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -219,15 +212,15 @@ public class NyxTheRobot {
                 // THIS CODE IS FOR STEPPING DOWN MOTOR POWER
                 if (!secondStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.75) {
                     for (DcMotorEx m : RightMotors)
-                        m.setPower(-power * 0.35);
+                        m.setPower(-power * 0.25);
                     for (DcMotorEx m : LeftMotors)
-                        m.setPower(power * 0.35);
+                        m.setPower(power * 0.25);
                     secondStepDownComplete = true;
                 } else if (!firstStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.50) {
                     for (DcMotorEx m : RightMotors)
-                        m.setPower(-power * 0.75);
+                        m.setPower(-power * 0.5);
                     for (DcMotorEx m : LeftMotors)
-                        m.setPower(power * 0.75);
+                        m.setPower(power * 0.5);
                     firstStepDownComplete = true;
                 }
 
@@ -257,15 +250,15 @@ public class NyxTheRobot {
                 // THIS CODE IS FOR STEPPING DOWN MOTOR POWER
                 if (!secondStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.75) {
                     for (DcMotorEx m : RightMotors)
-                        m.setPower(power * 0.35);
+                        m.setPower(power * 0.25);
                     for (DcMotorEx m : LeftMotors)
-                        m.setPower(-power * 0.35);
+                        m.setPower(-power * 0.25);
                     secondStepDownComplete = true;
                 } else if (!firstStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.50) {
                     for (DcMotorEx m : RightMotors)
-                        m.setPower(power * 0.75);
+                        m.setPower(power * 0.5);
                     for (DcMotorEx m : LeftMotors)
-                        m.setPower(-power * 0.75);
+                        m.setPower(-power * 0.5);
                     firstStepDownComplete = true;
                 }
                 OpModeReference.telemetry.addData("target", targetAngleDifference);
@@ -390,7 +383,7 @@ public class NyxTheRobot {
 
     public void setArm (int pos) {
         ARM.setTargetPosition(pos);
-        ARM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ARM.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         if (pos > ARM.getCurrentPosition()) {
             ARM.setPower(-0.2);
         }
@@ -403,7 +396,7 @@ public class NyxTheRobot {
     public void setArm2 (float pos) {
         int pos2 = Math.round(pos * 1880);
         ARM2.setTargetPosition(pos2);
-        ARM2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ARM2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         double power = ((float) (ARM2.getCurrentPosition() - pos2)/1880);
         ARM2.setPower(power);
 //        if (pos2 > ARM2.getCurrentPosition() + 10) {
@@ -440,9 +433,9 @@ public class NyxTheRobot {
         else
             movingSpeed = 0.5;
 
-        for (DcMotor l : LeftMotors)
+        for (DcMotorEx l : LeftMotors)
             l.setPower(movingSpeed * (drive + turn));
-        for (DcMotor r : RightMotors)
+        for (DcMotorEx r : RightMotors)
             r.setPower(movingSpeed * (drive - turn));
 //        OpModeReference.telemetry.addData("Central Velocity", speed*movingSpeed);
 //        OpModeReference.telemetry.addData("Lateral Velocity", strafe*movingSpeed);
