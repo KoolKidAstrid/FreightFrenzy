@@ -11,11 +11,23 @@ public class SingleDrive extends LinearOpMode {
         NyxTheRobot nyx = new NyxTheRobot(this);
         nyx.initialize();
         waitForStart();
+        float armPos = 0;
+        boolean latch = false;
 
         while (opModeIsActive()){
+            if (gamepad1.x) {
+                latch = true;
+                armPos = gamepad1.right_trigger;
+            }
+            else {
+                if (latch)
+                    armPos = ((float) nyx.ARM2.getCurrentPosition()) / 1725;
+                latch = false;
+            }
+
             nyx.driverControl();
             nyx.ducks(gamepad1.dpad_left, gamepad1.dpad_right);
-            nyx.setArm2(gamepad1.right_trigger);
+            nyx.setArm2(armPos);
 //            nyx.lifty(gamepad2.right_trigger);
 
             if (gamepad1.a)

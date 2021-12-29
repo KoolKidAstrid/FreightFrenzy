@@ -31,6 +31,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Path;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -84,6 +86,8 @@ public class NyxTheRobot {
     public CRServo IN1 = null;
     public CRServo IN2 = null;
 
+    public CRServo DK2 = null;
+
     // just gonna define some variables for encoders real quick dont mind me
     static final double mmPerInch               = 25.4f;    // this is jus math tho
     static final double countsPerRevolution     = 383.6f;   // Gobilda Yellowjacket 435
@@ -126,9 +130,12 @@ public class NyxTheRobot {
         IN1 = OpModeReference.hardwareMap.get(CRServo.class, "IN1");
         IN2 = OpModeReference.hardwareMap.get(CRServo.class, "IN2");
 
+        DK2 = OpModeReference.hardwareMap.get(CRServo.class, "DK2");
 
         IN1.setDirection(DcMotorEx.Direction.REVERSE);
         IN2.setDirection(DcMotorEx.Direction.FORWARD);
+
+        DK2.setDirection(DcMotorEx.Direction.FORWARD);
 
         // motor arrays
         // left
@@ -157,6 +164,9 @@ public class NyxTheRobot {
         ARM.setDirection(DcMotorEx.Direction.FORWARD);
         ARM.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
+
+        ARM2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        ARM2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         ARM2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         ARM2.setDirection(DcMotorEx.Direction.REVERSE);
 
@@ -165,22 +175,39 @@ public class NyxTheRobot {
         imu.initialize(parameters);
     }
 
+//    This method uses IMU and some math to turn more precisely during autonomous.  It takes a
+//    target angle to turn, then figures out how far that is from the current angle and gets a
+//    number from 0 to 1 determining what percentage of the turn has been completed.  It scales this
+//    down and either adds or subtracts a fixed value (depending on which way it's turning).  This
+//    makes it so that the robot turns fast and slows down as it approaches the target position, and
+//    corrects itself if it overshoots.
 
-    public void newTurn(double angle, double power) {
-        double current = GetCurrentZAngle();
-        double target = current + angle;
+    public void newTurn(double angle) {
 
-        while (current + 1 > target || current - 1 < target) {
-            current = GetCurrentZAngle();
-            double scale = Math.abs(target - current)*2;
-            double position = target - current;
+//        this figures out the target angle from the current angle and target turn amount
+        double target = GetCurrentZAngle() + angle;
+        double speed = 0.5;
+        double startPosition = Math.abs(target - GetCurrentZAngle());
+
+//        this makes it so it repeats until it's very close to the target
+        while (Math.abs(speed)>0.21) {
+            double position = target - GetCurrentZAngle();
+            if(position > 0)
+                speed = (position/startPosition)*0.3 + 0.2;
+            if(position < 0)
+                speed = (position/startPosition)*0.3 - 0.2;
 
             for (DcMotorEx r : RightMotors)
-                r.setPower(position/scale);
+                r.setPower(speed);
             for (DcMotorEx l : LeftMotors)
-                l.setPower(-position/scale);
+                l.setPower(-speed);
+            OpModeReference.telemetry.addData("target", target);
+            OpModeReference.telemetry.addData("Z", GetCurrentZAngle());
+            OpModeReference.telemetry.addData("speed", speed);
+            OpModeReference.telemetry.update();
         }
 
+//        this stops the motors at the end
         for (DcMotorEx m : AllMotors)
             m.setPower(0);
 
@@ -190,8 +217,11 @@ public class NyxTheRobot {
     // DO NOT try to turn more than 180 degrees in either direction
     // targetAngleDifference is the number of degrees you want to turn
     // should be positive if turning left, negative if turning right
-    public void turn(double targetAngleDifference, double power) {
+    public void turn(double targetAngleDifference) {
 
+        double power = 0.5;
+        double step1Speed = 0.5;
+        double step2Speed = 0.35;
         // before starting the turn, take note of current angle as startAngle
         double startAngle = GetCurrentZAngle();
 
@@ -219,15 +249,15 @@ public class NyxTheRobot {
                 // THIS CODE IS FOR STEPPING DOWN MOTOR POWER
                 if (!secondStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.75) {
                     for (DcMotorEx m : RightMotors)
-                        m.setPower(-power * 0.35);
+                        m.setPower(-power * step2Speed);
                     for (DcMotorEx m : LeftMotors)
-                        m.setPower(power * 0.35);
+                        m.setPower(power * step2Speed);
                     secondStepDownComplete = true;
                 } else if (!firstStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.50) {
                     for (DcMotorEx m : RightMotors)
-                        m.setPower(-power * 0.75);
+                        m.setPower(-power * step1Speed);
                     for (DcMotorEx m : LeftMotors)
-                        m.setPower(power * 0.75);
+                        m.setPower(power * step1Speed);
                     firstStepDownComplete = true;
                 }
 
@@ -257,15 +287,15 @@ public class NyxTheRobot {
                 // THIS CODE IS FOR STEPPING DOWN MOTOR POWER
                 if (!secondStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.75) {
                     for (DcMotorEx m : RightMotors)
-                        m.setPower(power * 0.35);
+                        m.setPower(power * step2Speed);
                     for (DcMotorEx m : LeftMotors)
-                        m.setPower(-power * 0.35);
+                        m.setPower(-power * step2Speed);
                     secondStepDownComplete = true;
                 } else if (!firstStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.50) {
                     for (DcMotorEx m : RightMotors)
-                        m.setPower(power * 0.75);
+                        m.setPower(power * step1Speed);
                     for (DcMotorEx m : LeftMotors)
-                        m.setPower(-power * 0.75);
+                        m.setPower(-power * step1Speed);
                     firstStepDownComplete = true;
                 }
                 OpModeReference.telemetry.addData("target", targetAngleDifference);
@@ -368,18 +398,18 @@ public class NyxTheRobot {
     }
 
     public void autoDucks(double seconds, double power) {
-        DK.setPower(power);
+        DK2.setPower(power);
         OpModeReference.sleep(Math.round(seconds*1000));
-        DK.setPower(0);
+        DK2.setPower(0);
     }
 
     public void ducks (boolean in, boolean out) {
         if (in && !out)
-            DK.setPower(0.35);
+            DK2.setPower(0.35);
         if (!in && out)
-            DK.setPower(-0.35);
+            DK2.setPower(-0.35);
         if (!in && !out)
-            DK.setPower(0);
+            DK2.setPower(0);
     }
 
     //crontol
@@ -401,10 +431,10 @@ public class NyxTheRobot {
 
 
     public void setArm2 (float pos) {
-        int pos2 = Math.round(pos * 1880);
+        int pos2 = Math.round(pos * 1725);
         ARM2.setTargetPosition(pos2);
         ARM2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        double power = ((float) (ARM2.getCurrentPosition() - pos2)/1880);
+        double power = ((float) (ARM2.getCurrentPosition() - pos2)/1725);
         ARM2.setPower(power);
 //        if (pos2 > ARM2.getCurrentPosition() + 10) {
 //            ARM2.setPower(-0.3);
@@ -423,8 +453,14 @@ public class NyxTheRobot {
     }
 
     public void intake (double power) {
-        IN1.setPower(power);
-        IN2.setPower(power);
+        if (power < 0) {
+            IN1.setPower(power * 0.25);
+            IN2.setPower(power * 0.25);
+        }
+        else {
+            IN1.setPower(power);
+            IN2.setPower(power);
+        }
     }
 
     public void driverControl () {
@@ -434,11 +470,11 @@ public class NyxTheRobot {
         double movingSpeed;
 
         if (OpModeReference.gamepad1.left_bumper)
-            movingSpeed = 0.1;
+            movingSpeed = 0.3;
         else if (OpModeReference.gamepad1.right_bumper)
             movingSpeed = 1;
         else
-            movingSpeed = 0.5;
+            movingSpeed = 0.6;
 
         for (DcMotor l : LeftMotors)
             l.setPower(movingSpeed * (drive + turn));

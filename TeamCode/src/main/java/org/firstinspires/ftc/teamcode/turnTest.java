@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Disabled
-@Autonomous(name="imu test 2", group="Linear Opmode")
-public class imutest2 extends LinearOpMode {
+@Autonomous(name="Turn Test", group="Linear Opmode")
+public class turnTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -14,9 +14,11 @@ public class imutest2 extends LinearOpMode {
         nyx.initialize();
         waitForStart();
 
-        nyx.turn(90);
-        sleep(1000);
-        nyx.turn(-90);
 
+        nyx.newTurn(-90);
+        sleep(1000);
+        nyx.newTurn(90);
     }
 }
+
+

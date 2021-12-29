@@ -10,12 +10,24 @@ public class MainDrive extends LinearOpMode {
     public void runOpMode() {
         NyxTheRobot nyx = new NyxTheRobot(this);
         nyx.initialize();
-        waitForStart();
+        waitForStart();float armPos = 0;
+        boolean latch = false;
 
         while (opModeIsActive()){
+            if (gamepad2.x) {
+                latch = true;
+                armPos = gamepad2.right_trigger;
+            }
+            else {
+                if (latch)
+                    armPos = ((float) nyx.ARM2.getCurrentPosition()) / 1725;
+                latch = false;
+            }
+
+
             nyx.driverControl();
-            nyx.ducks(gamepad2.left_bumper, gamepad2.right_bumper);
-            nyx.setArm2(gamepad2.right_trigger);
+            nyx.ducks(gamepad2.dpad_left, gamepad2.dpad_right);
+            nyx.setArm2(armPos);
 //            nyx.lifty(gamepad2.right_trigger);
 
             nyx.intake(gamepad2.left_stick_y);
