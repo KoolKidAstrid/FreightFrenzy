@@ -2,10 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name="Auto Blue New", group="Linear Opmode")
-public class AutoBlueNew extends LinearOpMode {
+@Autonomous(name="Auto Red New", group="Linear Opmode")
+public class AutoRedNew extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -44,25 +43,29 @@ public class AutoBlueNew extends LinearOpMode {
             nyx.drive(9, 0.5);
 
 //        turn to carousel
-            nyx.newTurn(90);
+            nyx.newTurn(-90);
 
 //        drive to carousel
-            nyx.drive(48, 0.5);
+            nyx.drive(21, 0.5);
+
+            nyx.newTurn(-45);
+
+            nyx.drive(30,0.5);
+
+            nyx.newTurn(135);
+
+            nyx.drive(17, 0.5);
+            nyx.drive(3, 0.25);
 
 //        spin :)
-            nyx.autoDucks(5, 0.25);
-
-
-//        turn to square
-            nyx.drive(-1, 0.25);
-            nyx.newTurn(-120);
+            nyx.autoDucks(5, -0.25);
 
 //        park
-            nyx.drive(-16, 0.5);
-            nyx.newTurn(30);
-            nyx.drive(-2, 0.5);
+            nyx.drive(-17, 0.5);
 
             done = true;
         }
+
     }
 }
+

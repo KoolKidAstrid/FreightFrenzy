@@ -55,6 +55,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.internal.hardware.usb.ArmableUsbDevice;
 //blinkin import
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
@@ -192,10 +193,12 @@ public class NyxTheRobot {
 //        this makes it so it repeats until it's very close to the target
         while (Math.abs(speed)>0.21) {
             double position = target - GetCurrentZAngle();
+            double good = (position/startPosition)*0.325;
+            double bias = 0.175;
             if(position > 0)
-                speed = (position/startPosition)*0.3 + 0.2;
+                speed = good + bias;
             if(position < 0)
-                speed = (position/startPosition)*0.3 - 0.2;
+                speed = good - bias;
 
             for (DcMotorEx r : RightMotors)
                 r.setPower(speed);
@@ -433,7 +436,7 @@ public class NyxTheRobot {
     public void setArm2 (float pos) {
         int pos2 = Math.round(pos * 1725);
         ARM2.setTargetPosition(pos2);
-        ARM2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ARM2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         double power = ((float) (ARM2.getCurrentPosition() - pos2)/1725);
         ARM2.setPower(power);
 //        if (pos2 > ARM2.getCurrentPosition() + 10) {
@@ -448,14 +451,24 @@ public class NyxTheRobot {
 //        }
     }
 
+    public void setArmAuto (int targetTicks) {
+        ARM2.setTargetPosition(targetTicks);
+        ARM2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        ARM2.setPower(0.25);
+        while (ARM2.isBusy()) {
+
+        }
+//        ARM2.setPower(0);
+    }
+
     public void spinny (double power) {
         IN.setPower(power);
     }
 
     public void intake (double power) {
         if (power < 0) {
-            IN1.setPower(power * 0.25);
-            IN2.setPower(power * 0.25);
+            IN1.setPower(power * 0.5);
+            IN2.setPower(power * 0.5);
         }
         else {
             IN1.setPower(power);
