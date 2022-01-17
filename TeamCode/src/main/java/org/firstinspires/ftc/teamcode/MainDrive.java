@@ -21,7 +21,7 @@ public class MainDrive extends LinearOpMode {
             }
             else {
                 if (latch)
-                    armPos = ((float) nyx.ARM2.getCurrentPosition()) / 1725;
+                    armPos = ((float) nyx.ARM.getCurrentPosition()) / 1725;
                 latch = false;
             }
 

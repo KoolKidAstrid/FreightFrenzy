@@ -31,33 +31,19 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Path;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 //vision import
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import java.util.List;
 //dont mind me just importing some imu stuff
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.internal.hardware.usb.ArmableUsbDevice;
 //blinkin import
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+
 
 // This is not an OpMode.  It is a class that holds all the boring stuff
 
@@ -77,17 +63,12 @@ public class NyxTheRobot {
     public DcMotorEx BL = null;
     public DcMotorEx BR = null;
 
-    public DcMotorEx DK = null;
-
-    public DcMotorEx IN = null;
     public DcMotorEx ARM = null;
-
-    public DcMotorEx ARM2 = null;
 
     public CRServo IN1 = null;
     public CRServo IN2 = null;
 
-    public CRServo DK2 = null;
+    public CRServo DK = null;
 
     // just gonna define some variables for encoders real quick dont mind me
     static final double mmPerInch               = 25.4f;    // this is jus math tho
@@ -121,22 +102,17 @@ public class NyxTheRobot {
         BL = OpModeReference.hardwareMap.get(DcMotorEx.class, "BL");
         BR = OpModeReference.hardwareMap.get(DcMotorEx.class, "BR");
 
-        DK = OpModeReference.hardwareMap.get(DcMotorEx.class, "DK");
-
-        IN = OpModeReference.hardwareMap.get(DcMotorEx.class, "IN");
-        ARM = OpModeReference.hardwareMap.get(DcMotorEx.class, "ARM");
-
-        ARM2 = OpModeReference.hardwareMap.get(DcMotorEx.class, "ARM2");
+        ARM = OpModeReference.hardwareMap.get(DcMotorEx.class, "ARM2");
 
         IN1 = OpModeReference.hardwareMap.get(CRServo.class, "IN1");
         IN2 = OpModeReference.hardwareMap.get(CRServo.class, "IN2");
 
-        DK2 = OpModeReference.hardwareMap.get(CRServo.class, "DK2");
+        DK = OpModeReference.hardwareMap.get(CRServo.class, "DK2");
 
         IN1.setDirection(DcMotorEx.Direction.REVERSE);
         IN2.setDirection(DcMotorEx.Direction.FORWARD);
 
-        DK2.setDirection(DcMotorEx.Direction.FORWARD);
+        DK.setDirection(DcMotorEx.Direction.FORWARD);
 
         // motor arrays
         // left
@@ -160,16 +136,11 @@ public class NyxTheRobot {
             m.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         }
 
+
         ARM.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         ARM.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        ARM.setDirection(DcMotorEx.Direction.FORWARD);
         ARM.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-
-
-        ARM2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        ARM2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        ARM2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        ARM2.setDirection(DcMotorEx.Direction.REVERSE);
+        ARM.setDirection(DcMotorEx.Direction.REVERSE);
 
 
         // initialize the IMU
@@ -220,7 +191,7 @@ public class NyxTheRobot {
     // DO NOT try to turn more than 180 degrees in either direction
     // targetAngleDifference is the number of degrees you want to turn
     // should be positive if turning left, negative if turning right
-    public void turn(double targetAngleDifference) {
+    public void oldTurn(double targetAngleDifference) {
 
         double power = 0.5;
         double step1Speed = 0.5;
@@ -401,18 +372,18 @@ public class NyxTheRobot {
     }
 
     public void autoDucks(double seconds, double power) {
-        DK2.setPower(power);
+        DK.setPower(power);
         OpModeReference.sleep(Math.round(seconds*1000));
-        DK2.setPower(0);
+        DK.setPower(0);
     }
 
     public void ducks (boolean in, boolean out) {
         if (in && !out)
-            DK2.setPower(0.35);
+            DK.setPower(0.35);
         if (!in && out)
-            DK2.setPower(-0.35);
+            DK.setPower(-0.35);
         if (!in && !out)
-            DK2.setPower(0);
+            DK.setPower(0);
     }
 
     //crontol
@@ -421,24 +392,12 @@ public class NyxTheRobot {
 //        LFT.setPosition(Range.clip(control, 0f, 1f));
 //    }
 
-    public void setArm (int pos) {
-        ARM.setTargetPosition(pos);
-        ARM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if (pos > ARM.getCurrentPosition()) {
-            ARM.setPower(-0.2);
-        }
-        else {
-            ARM.setPower(0.5);
-        }
-    }
-
-
     public void setArm2 (float pos) {
         int pos2 = Math.round(pos * 1725);
-        ARM2.setTargetPosition(pos2);
-        ARM2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        double power = ((float) (ARM2.getCurrentPosition() - pos2)/1725);
-        ARM2.setPower(power);
+        ARM.setTargetPosition(pos2);
+        ARM.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        double power = ((float) (ARM.getCurrentPosition() - pos2)/1725);
+        ARM.setPower(power);
 //        if (pos2 > ARM2.getCurrentPosition() + 10) {
 //            ARM2.setPower(-0.3);
 //        }
@@ -452,18 +411,15 @@ public class NyxTheRobot {
     }
 
     public void setArmAuto (int targetTicks) {
-        ARM2.setTargetPosition(targetTicks);
-        ARM2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        ARM2.setPower(0.25);
-        while (ARM2.isBusy()) {
+        ARM.setTargetPosition(targetTicks);
+        ARM.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        ARM.setPower(0.25);
+        while (ARM.isBusy()) {
 
         }
 //        ARM2.setPower(0);
     }
 
-    public void spinny (double power) {
-        IN.setPower(power);
-    }
 
     public void intake (double power) {
         if (power < 0) {

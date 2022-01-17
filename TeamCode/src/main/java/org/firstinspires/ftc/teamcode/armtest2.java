@@ -16,9 +16,9 @@ public class armtest2 extends LinearOpMode {
         nyx.initialize();
         waitForStart();
 
-        nyx.setArm(-280);
+//        nyx.setArm(-280);
         sleep(3000);
-        nyx.setArm(0);
+//        nyx.setArm(0);
 
     }
 }

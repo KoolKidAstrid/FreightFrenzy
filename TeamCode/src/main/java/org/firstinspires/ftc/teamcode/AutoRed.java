@@ -17,8 +17,8 @@ public class AutoRed extends LinearOpMode {
 
 
         nyx.drive(-12, 0.5);
-        nyx.setArm(-280);
-        nyx.turn(100);
+//        nyx.setArm(-280);
+        nyx.oldTurn(100);
         nyx.drive(-24, 0.5);
         for (DcMotor m : nyx.AllMotors) {
             m.setPower(-0.025);
@@ -29,10 +29,10 @@ public class AutoRed extends LinearOpMode {
         }
 
         nyx.drive(2, 0.25);
-        nyx.turn(-90);
+        nyx.oldTurn(-90);
         nyx.drive(-20, 0.5);
 
-        nyx.setArm(0);
+//        nyx.setArm(0);
 
     }
 }

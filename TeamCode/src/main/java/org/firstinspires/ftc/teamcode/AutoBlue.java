@@ -17,10 +17,10 @@ public class AutoBlue extends LinearOpMode {
 
 
         nyx.drive(-12, 0.5);
-        nyx.setArm(-280);
-        nyx.turn(-90);
+//        nyx.setArm(-280);
+        nyx.oldTurn(-90);
         nyx.drive(-20, 0.5);
-        nyx.turn(-75);
+        nyx.oldTurn(-75);
         nyx.drive(-8, 0.5);
         for (DcMotor m : nyx.AllMotors) {
             m.setPower(-0.025);
@@ -29,10 +29,10 @@ public class AutoBlue extends LinearOpMode {
         for (DcMotor m : nyx.AllMotors) {
             m.setPower(0);
         }
-        nyx.turn(-25);
+        nyx.oldTurn(-25);
         nyx.drive(18, 0.5);
 
-        nyx.setArm(0);
+//        nyx.setArm(0);
         
     }
 }

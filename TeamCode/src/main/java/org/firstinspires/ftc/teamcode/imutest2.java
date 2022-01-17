@@ -14,9 +14,9 @@ public class imutest2 extends LinearOpMode {
         nyx.initialize();
         waitForStart();
 
-        nyx.turn(90);
+        nyx.oldTurn(90);
         sleep(1000);
-        nyx.turn(-90);
+        nyx.oldTurn(-90);
 
     }
 }

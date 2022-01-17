@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,8 +15,8 @@ public class armtest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            nyx.ARM2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            telemetry.addData("swag", nyx.ARM2.getCurrentPosition());
+            nyx.ARM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            telemetry.addData("swag", nyx.ARM.getCurrentPosition());
             telemetry.update();
         }
 
