@@ -10,7 +10,8 @@ public class MainDrive extends LinearOpMode {
     public void runOpMode() {
         NyxTheRobot nyx = new NyxTheRobot(this);
         nyx.initialize();
-        waitForStart();float armPos = 0;
+        waitForStart();
+        float armPos = 0;
         boolean latch = false;
 
         while (opModeIsActive()){

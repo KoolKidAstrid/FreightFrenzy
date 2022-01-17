@@ -3,14 +3,15 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Auto Red Main", group="Linear Opmode")
-public class AutoRedNew extends LinearOpMode {
+@Autonomous(name="Blue Warehouse", group="Linear Opmode")
+public class AutoBlueWarehouse extends LinearOpMode {
 
     @Override
     public void runOpMode() {
         NyxTheRobot nyx = new NyxTheRobot(this);
         nyx.initialize();
         waitForStart();
+
 
 //        drive to wobble thing
         nyx.drive(-12, 0.5);
@@ -35,29 +36,13 @@ public class AutoRedNew extends LinearOpMode {
 
         nyx.setArmAuto(0);
 
-//        drive backwards
-        nyx.drive(7, 0.5);
+        nyx.drive(-2, 0.25);
 
-//        turn to carousel
-        nyx.newTurn(-90);
+//        turn to warehouse
+        nyx.newTurn(90);
 
-//        drive to carousel
-        nyx.drive(21, 0.5);
+//        drive to warehouse
+        nyx.drive(-72, 1);
 
-        nyx.newTurn(-45);
-
-        nyx.drive(30,0.5);
-
-        nyx.newTurn(135);
-
-        nyx.drive(17, 0.5);
-        nyx.drive(3, 0.25);
-
-//        spin :)
-        nyx.autoDucks(5, -0.25);
-
-//        park
-        nyx.drive(-17, 0.5);
     }
 }
-
